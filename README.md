@@ -1,0 +1,2 @@
+# VideoRekog
+Video Recognition monorepo
