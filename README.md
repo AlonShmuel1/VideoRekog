@@ -22,10 +22,22 @@
    ```sh
     npm install
 
-2. **Run locally in dev mode:**
+3. **Run locally in dev mode:**
 
    ```sh
     npm run dev
 
 ## Backend
+1. **Navigate to the frontend directory:**
 
+   ```sh
+    cd back_video_rekog
+
+2. **PIP Install**
+   ```sh
+   pip install -r requirements.txt
+
+3. **Run backend locally**
+
+   ```sh
+    python3 app.py
