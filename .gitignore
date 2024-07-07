@@ -55,7 +55,7 @@ Test.*
 *.wmv
 
 venv
-
+python-test.py
 *.env
 .vscode
 
