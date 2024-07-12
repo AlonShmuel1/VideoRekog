@@ -8,14 +8,14 @@
 
 ### Technology
 
-- **Vue.js**
+- **REACT**
 
 ### Setup for
 
 1. **Navigate to the frontend directory:**
 
    ```sh
-    cd front_video_rekog
+    cd video-upload-app
 
 2. **NPM INSTALL:**
 
@@ -25,7 +25,7 @@
 3. **Run locally in dev mode:**
 
    ```sh
-    npm run dev
+    npm start
 
 ## Backend
 1. **Navigate to the frontend directory:**
