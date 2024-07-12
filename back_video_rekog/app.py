@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # Configure AWS information
 S3_BUCKET = 'video-recog'
@@ -80,6 +80,7 @@ def get_label_detection(job_id):
 # Route to handle video uploads
 @app.route('/upload', methods=['POST'])
 def upload_video():
+    print('Handle upload triggered')
     try:
         # Check if the post request has the file part
         if 'video' not in request.files:
@@ -94,18 +95,19 @@ def upload_video():
         
         if file:
             # Upload file to S3 bucket
+            response_to_ui = {'labels': {'JobStatus': 'SUCCEEDED', 'VideoMetadata': {'Codec': 'h264', 'DurationMillis': 9600, 'Format': 'QuickTime / MOV', 'FrameRate': 25.0, 'FrameHeight': 1080, 'FrameWidth': 1920, 'ColorRange': 'LIMITED'}, 'NextToken': '1K4zrai2RDfjgILpKfkvmBcvjtpfl110RS3lRmXFEBZjNgZ0dHlBgOESp4DEh4RZSR17zlS7', 'Labels': [{'Timestamp': 0, 'Label': {'Name': 'Boy', 'Confidence': 90.10444641113281, 'Instances': [{'BoundingBox': {'Width': 0.1568606048822403, 'Height': 0.6204899549484253, 'Left': 0.2810244560241699, 'Top': 0.37830355763435364}, 'Confidence': 89.93324279785156}], 'Parents': [{'Name': 'Male'}, {'Name': 'Person'}], 'Aliases': [], 'Categories': [{'Name': 'Person Description'}]}}], 'LabelModelVersion': '3.0', 'JobId': '463fc0180adbad3581cc46c7cda86666d159f91e5208405cd0820f1f8c47cdca', 'Video': {'S3Object': {'Bucket': 'video-recog', 'Name': 'kfir_tennis_fat.mp4'}}, 'GetRequestMetadata': {'SortBy': 'TIMESTAMP', 'AggregateBy': 'TIMESTAMPS'}, 'ResponseMetadata': {'RequestId': '0cbfec5b-8cc7-4c45-8779-162c8e508971', 'HTTPStatusCode': 200, 'HTTPHeaders': {'x-amzn-requestid': '0cbfec5b-8cc7-4c45-8779-162c8e508971', 'content-type': 'application/x-amz-json-1.1', 'content-length': '873', 'date': 'Fri, 12 Jul 2024 13:40:13 GMT'}, 'RetryAttempts': 0}}, 'object_url': 'https://video-recog.s3.amazonaws.com/kfir_tennis_fat.mp4'}
+            return response_to_ui
             s3_client.upload_fileobj(file, S3_BUCKET, file.filename)
             # Get S3 URI
-            s3_uri = f's3://{S3_BUCKET}/{file.filename}'
+            # s3_uri = f's3://{S3_BUCKET}/{file.filename}'
             # Get Object URL
-            object_url = f'https://{S3_BUCKET}.s3.amazonaws.com/{file.filename}'
-            print(f"URI: {s3_uri}\nURL: {object_url}")
             job_id = start_label_detection(S3_BUCKET, file.filename)
             print(f"Started label detection job with ID: {job_id}")
-            response = get_label_detection(job_id)
-            print(response)
+            response_to_ui['labels']= get_label_detection(job_id)
+            response_to_ui['object_url'] = f'https://{S3_BUCKET}.s3.amazonaws.com/{file.filename}'
+            print(response_to_ui)
             # return jsonify({'message': 'File uploaded successfully'}), 200
-            return jsonify({'message': response}), 200
+            return jsonify(response_to_ui), 200
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
