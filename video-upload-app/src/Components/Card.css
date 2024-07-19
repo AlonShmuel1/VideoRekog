@@ -1,0 +1,21 @@
+/* Card.css */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 5px;
+    width: 100px; /* Set a fixed width for the card */
+    text-align: center;
+    font-size: 12px; /* Adjust font size */
+  }
+  
+  .card-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .card-label {
+    padding: 5px;
+    background-color: #f8f8f8;
+  }
+  
